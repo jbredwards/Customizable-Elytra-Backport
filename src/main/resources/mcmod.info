@@ -1,0 +1,14 @@
+[{
+  "modid": "customizableelytra",
+  "name": "Customizable Elytra",
+  "description": "Allows elytra to be dyed like leather armor and have banners placed on them like shields.",
+  "version": "${version}",
+  "mcversion": "1.12.2",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["hidoni", "jbredwards"],
+  "credits": "Hidoni - original mod creator; Jbredwards - 1.12.2 maintainer",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}]

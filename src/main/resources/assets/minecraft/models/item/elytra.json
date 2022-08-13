@@ -1,0 +1,11 @@
+{
+    "parent":"item/generated",
+    "textures":{
+        "layer0":"customizableelytra:items/left_wing",
+        "layer1":"customizableelytra:items/right_wing"
+    },
+    "overrides":[{
+        "model":"item/broken_elytra",
+        "predicate":{"broken":1}
+    }]
+}
