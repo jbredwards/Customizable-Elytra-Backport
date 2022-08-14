@@ -29,17 +29,17 @@ public abstract class AbstractDyeingRecipe extends AbstractDynamicRecipe
 
     public void applyDyesToWing(@Nonnull IWingCapability cap, @Nonnull List<EnumDyeColor> dyes) {
         final WingCustomizationData data = WingCustomizationData.copyOf(cap.getData());
-        data.baseColor = getResultDyeColor(cap.getData().baseColor, dyes);
+        data.baseColor = getResultDyeColor(data.baseColor, dyes);
         data.addCustomization(WingCustomizations.DYE);
 
         cap.setData(data);
     }
 
     public int getResultDyeColor(int baseColor, @Nonnull List<EnumDyeColor> dyes) {
-        final int size = dyes.size() + (baseColor > -1 ? 1 : 0);
-        float r = baseColor > 0 ? (baseColor >> 16 & 0xFF) / 255f : 0;
-        float g = baseColor > 0 ? (baseColor >> 8 & 0xFF) / 255f : 0;
-        float b = baseColor > 0 ? (baseColor & 0xFF) / 255f : 0;
+        final int size = dyes.size() + (baseColor != -1 ? 1 : 0);
+        float r = baseColor != -1 ? (baseColor >> 16 & 0xFF) / 255f : 0;
+        float g = baseColor != -1 ? (baseColor >> 8 & 0xFF) / 255f : 0;
+        float b = baseColor != -1 ? (baseColor & 0xFF) / 255f : 0;
 
         for(EnumDyeColor dye : dyes) {
             final float[] rgb = dye.getColorComponentValues();
