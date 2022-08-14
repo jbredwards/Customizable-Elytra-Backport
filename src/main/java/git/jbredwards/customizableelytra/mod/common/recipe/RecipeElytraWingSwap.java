@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
  * @author jbred
  *
  */
-public class ElytraWingSwapRecipe extends AbstractDynamicRecipe
+public class RecipeElytraWingSwap extends AbstractDynamicRecipe
 {
     @Override
     public boolean matches(@Nonnull InventoryCrafting inv, @Nonnull World worldIn) {

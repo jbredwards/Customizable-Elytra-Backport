@@ -15,7 +15,7 @@ import java.util.List;
  * @author jbred
  *
  */
-public class ElytraDyeingRecipe extends AbstractDyeingRecipe
+public class RecipeElytraDyeing extends AbstractDyeingRecipe
 {
     @Override
     public boolean isDyeableTarget(@Nonnull ItemStack stack) {
