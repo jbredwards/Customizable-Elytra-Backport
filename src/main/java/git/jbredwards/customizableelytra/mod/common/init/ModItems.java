@@ -18,5 +18,6 @@ public final class ModItems
     public static final Item WING = new ItemElytraWing()
             .setRegistryName(Constants.MODID, "wing")
             .setTranslationKey(Constants.MODID + ".wing")
-            .setCreativeTab(CreativeTabs.MISC);
+            .setCreativeTab(CreativeTabs.MISC)
+            .setMaxStackSize(2);
 }

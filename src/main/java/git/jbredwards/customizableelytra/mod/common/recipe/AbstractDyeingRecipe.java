@@ -121,7 +121,4 @@ public abstract class AbstractDyeingRecipe extends AbstractDynamicRecipe
 
     @Override
     public boolean canFit(int width, int height) { return width * height >= 2; }
-
-    @Override
-    public boolean isDynamic() { return true; }
 }
