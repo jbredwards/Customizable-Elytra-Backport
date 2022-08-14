@@ -30,9 +30,7 @@ public final class RegistryHandler
 
     @SubscribeEvent
     public static void registerRecipes(@Nonnull RegistryEvent.Register<IRecipe> event) {
-        event.getRegistry().register(ModRecipes.ELYTRA_DYEING);
-        event.getRegistry().register(ModRecipes.ELYTRA_WING_DYEING);
-        event.getRegistry().register(ModRecipes.ELYTRA_WING_SWAP);
+        event.getRegistry().registerAll(ModRecipes.RECIPES.toArray(new IRecipe[0]));
     }
 
     @SideOnly(Side.CLIENT)

@@ -3,6 +3,8 @@ package git.jbredwards.customizableelytra.mod.common.capability;
 import git.jbredwards.customizableelytra.mod.Constants;
 import git.jbredwards.customizableelytra.mod.common.item.ItemElytraWing;
 import git.jbredwards.customizableelytra.api.WingCustomizationData;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -32,6 +34,9 @@ public interface IWingCapability
 
     @Nonnull WingCustomizationData getData();
     void setData(@Nonnull WingCustomizationData dataIn);
+
+    @Nonnull
+    default Item getCombineItem() { return Items.ELYTRA; }
 
     @Nullable
     static IWingCapability get(@Nullable ICapabilityProvider provider) {
