@@ -1,7 +1,6 @@
 package git.jbredwards.customizableelytra.mod.common.recipe;
 
 import git.jbredwards.customizableelytra.mod.common.capability.IElytraCapability;
-import git.jbredwards.customizableelytra.mod.common.util.CustomizationType;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
@@ -20,20 +19,15 @@ public class RecipeElytraDyeing extends AbstractDyeingRecipe
     @Override
     public boolean isDyeableTarget(@Nonnull ItemStack stack) {
         final @Nullable IElytraCapability cap = IElytraCapability.get(stack);
-        return cap != null
-                && (cap.getLeftWing().getData().type != CustomizationType.BANNER
-                || cap.getRightWing().getData().type != CustomizationType.BANNER);
+        return cap != null;
     }
 
     @Override
     public void applyDyesToStack(@Nonnull ItemStack stack, @Nonnull List<EnumDyeColor> dyes) {
         final @Nullable IElytraCapability cap = IElytraCapability.get(stack);
         if(cap != null) {
-            if(cap.getLeftWing().getData().type != CustomizationType.BANNER)
-                applyDyesToWing(cap.getLeftWing(), dyes);
-
-            if(cap.getRightWing().getData().type != CustomizationType.BANNER)
-                applyDyesToWing(cap.getRightWing(), dyes);
+            applyDyesToWing(cap.getLeftWing(), dyes);
+            applyDyesToWing(cap.getRightWing(), dyes);
         }
     }
 

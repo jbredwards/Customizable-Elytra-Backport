@@ -1,8 +1,8 @@
 package git.jbredwards.customizableelytra.mod.common.recipe;
 
+import git.jbredwards.customizableelytra.api.customizations.WingCustomizations;
 import git.jbredwards.customizableelytra.mod.common.capability.IWingCapability;
-import git.jbredwards.customizableelytra.mod.common.util.CustomizationType;
-import git.jbredwards.customizableelytra.mod.common.util.ElytraWingData;
+import git.jbredwards.customizableelytra.api.WingCustomizationData;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
@@ -28,9 +28,9 @@ public abstract class AbstractDyeingRecipe extends AbstractDynamicRecipe
     public abstract void applyDyesToStack(@Nonnull ItemStack stack, @Nonnull List<EnumDyeColor> dyes);
 
     public void applyDyesToWing(@Nonnull IWingCapability cap, @Nonnull List<EnumDyeColor> dyes) {
-        final ElytraWingData data = new ElytraWingData();
-        data.color = getResultDyeColor(cap.getData().color, dyes);
-        data.type = CustomizationType.DYE;
+        final WingCustomizationData data = WingCustomizationData.copyOf(cap.getData());
+        data.baseColor = getResultDyeColor(cap.getData().baseColor, dyes);
+        data.addCustomization(WingCustomizations.DYE);
 
         cap.setData(data);
     }

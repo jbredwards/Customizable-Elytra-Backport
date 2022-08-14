@@ -1,8 +1,7 @@
 package git.jbredwards.customizableelytra.mod.client.layer;
 
 import git.jbredwards.customizableelytra.mod.common.capability.IElytraCapability;
-import git.jbredwards.customizableelytra.mod.common.util.CustomizationType;
-import git.jbredwards.customizableelytra.mod.common.util.ElytraWingData;
+import git.jbredwards.customizableelytra.api.WingCustomizationData;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelElytra;
 import net.minecraft.client.model.ModelRenderer;
@@ -13,13 +12,13 @@ import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.player.EnumPlayerModelParts;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.awt.*;
 
 /**
  *
@@ -48,17 +47,32 @@ public class LayerCustomizableElytra implements LayerRenderer<AbstractClientPlay
         }
     }
 
-    protected void renderWing(@Nonnull ItemStack stack, @Nonnull ElytraWingData wing, @Nonnull ModelRenderer wingModelToIgnore, @Nonnull AbstractClientPlayer entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    protected void renderWing(@Nonnull ItemStack stack, @Nonnull WingCustomizationData data, @Nonnull ModelRenderer wingModelToIgnore, @Nonnull AbstractClientPlayer entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         GlStateManager.pushMatrix();
 
-        if(wing.type != CustomizationType.DYE || wing.color == -1) GlStateManager.color(1, 1, 1);
-        else {
-            final float[] rgb = new Color(wing.color).getRGBColorComponents(new float[3]);
-            GlStateManager.color(rgb[0], rgb[1], rgb[2]);
+        //apply custom color
+        boolean changedColor = false;
+        for(int i = data.size() - 1; i >= 0; i--) {
+            final EnumActionResult result = data.getCustomizationAt(i).changeEquipmentColor(stack, data, entity);
+            if(result == EnumActionResult.PASS) continue;
+            if(result == EnumActionResult.SUCCESS) changedColor = true;
+            break;
         }
 
-        //TODO, add banner texture handler
-        if(wing.type != CustomizationType.BANNER) {
+        //apply default color
+        if(!changedColor) GlStateManager.color(1, 1, 1);
+
+        //apply custom texture
+        boolean changedTexture = false;
+        for(int i = data.size() - 1; i >= 0; i--) {
+            final EnumActionResult result = data.getCustomizationAt(i).changeTexture(stack, data, entity, renderer::bindTexture);
+            if(result == EnumActionResult.PASS) continue;
+            if(result == EnumActionResult.SUCCESS) changedTexture = true;
+            break;
+        }
+
+        //apply default texture
+        if(!changedTexture) {
             if(entity.isPlayerInfoSet() && entity.getLocationElytra() != null)
                 renderer.bindTexture(entity.getLocationElytra());
 
@@ -84,7 +98,6 @@ public class LayerCustomizableElytra implements LayerRenderer<AbstractClientPlay
 
         wingModelToIgnore.isHidden = prevIsHidden;
 
-        GlStateManager.disableBlend();
         GlStateManager.popMatrix();
         GlStateManager.popMatrix();
     }

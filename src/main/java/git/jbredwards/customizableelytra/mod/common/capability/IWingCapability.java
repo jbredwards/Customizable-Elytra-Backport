@@ -2,7 +2,7 @@ package git.jbredwards.customizableelytra.mod.common.capability;
 
 import git.jbredwards.customizableelytra.mod.Constants;
 import git.jbredwards.customizableelytra.mod.common.item.ItemElytraWing;
-import git.jbredwards.customizableelytra.mod.common.util.ElytraWingData;
+import git.jbredwards.customizableelytra.api.WingCustomizationData;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -30,8 +30,8 @@ public interface IWingCapability
     @CapabilityInject(IWingCapability.class)
     @Nonnull Capability<IWingCapability> CAPABILITY = null;
 
-    @Nonnull ElytraWingData getData();
-    void setData(@Nonnull ElytraWingData dataIn);
+    @Nonnull WingCustomizationData getData();
+    void setData(@Nonnull WingCustomizationData dataIn);
 
     @Nullable
     static IWingCapability get(@Nullable ICapabilityProvider provider) {
@@ -46,14 +46,15 @@ public interface IWingCapability
 
     final class Impl implements IWingCapability
     {
-        ElytraWingData data = new ElytraWingData();
+        @Nonnull
+        WingCustomizationData data = new WingCustomizationData();
 
         @Nonnull
         @Override
-        public ElytraWingData getData() { return data; }
+        public WingCustomizationData getData() { return data; }
 
         @Override
-        public void setData(@Nonnull ElytraWingData dataIn) { data = dataIn; }
+        public void setData(@Nonnull WingCustomizationData dataIn) { data = dataIn; }
     }
 
     enum Storage implements Capability.IStorage<IWingCapability>

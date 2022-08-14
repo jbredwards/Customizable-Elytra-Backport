@@ -1,5 +1,6 @@
 package git.jbredwards.customizableelytra.mod;
 
+import git.jbredwards.customizableelytra.api.event.WingCustomizationRegistryEvent;
 import git.jbredwards.customizableelytra.mod.client.layer.LayerCustomizableElytra;
 import git.jbredwards.customizableelytra.mod.common.capability.IElytraCapability;
 import git.jbredwards.customizableelytra.mod.common.capability.IWingCapability;
@@ -8,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.layers.LayerElytra;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.util.datafix.FixTypes;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
@@ -41,6 +43,7 @@ public final class Main
     public static class CommonProxy
     {
         protected void preInit() {
+            MinecraftForge.EVENT_BUS.post(new WingCustomizationRegistryEvent());
             CapabilityManager.INSTANCE.register(IElytraCapability.class, IElytraCapability.Storage.INSTANCE, IElytraCapability.Impl::new);
             CapabilityManager.INSTANCE.register(IWingCapability.class, IWingCapability.Storage.INSTANCE, IWingCapability.Impl::new);
         }

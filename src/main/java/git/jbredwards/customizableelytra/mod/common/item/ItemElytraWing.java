@@ -1,6 +1,5 @@
 package git.jbredwards.customizableelytra.mod.common.item;
 
-import git.jbredwards.customizableelytra.mod.client.util.TooltipHandler;
 import git.jbredwards.customizableelytra.mod.common.capability.IWingCapability;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
@@ -24,7 +23,9 @@ public class ItemElytraWing extends Item
     @Override
     public void addInformation(@Nonnull ItemStack stack, @Nullable World worldIn, @Nonnull List<String> tooltip, @Nonnull ITooltipFlag flagIn) {
         final @Nullable IWingCapability cap = IWingCapability.get(stack);
-        if(cap != null) TooltipHandler.addTooltip(cap.getData(), tooltip, flagIn.isAdvanced());
+        if(cap != null) cap.getData().forEach(customization ->
+                customization.addTooltip(stack, cap.getData(), tooltip, flagIn.isAdvanced()));
+
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 }

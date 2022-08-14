@@ -1,11 +1,9 @@
 package git.jbredwards.customizableelytra.mod.client;
 
 import git.jbredwards.customizableelytra.mod.Constants;
-import git.jbredwards.customizableelytra.mod.client.util.TooltipHandler;
 import git.jbredwards.customizableelytra.mod.common.capability.IElytraCapability;
 import git.jbredwards.customizableelytra.mod.common.capability.IWingCapability;
 import git.jbredwards.customizableelytra.mod.common.init.ModItems;
-import git.jbredwards.customizableelytra.mod.common.util.CustomizationType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
 import net.minecraftforge.client.event.ColorHandlerEvent;
@@ -32,8 +30,8 @@ public final class ClientEventHandler
         event.getItemColors().registerItemColorHandler((stack, tintIndex) -> {
             final @Nullable IElytraCapability cap = IElytraCapability.get(stack);
             if(cap != null) switch(tintIndex) {
-                case 0: return cap.getLeftWing().getData().color;
-                case 1: return cap.getRightWing().getData().color;
+                case 0: return cap.getLeftWing().getData().baseColor;
+                case 1: return cap.getRightWing().getData().baseColor;
             }
 
             return -1;
@@ -42,7 +40,7 @@ public final class ClientEventHandler
         //set elytra wing color handler
         event.getItemColors().registerItemColorHandler((stack, tintIndex) -> {
             final @Nullable IWingCapability cap = IWingCapability.get(stack);
-            if(cap != null) return cap.getData().color;
+            if(cap != null) return cap.getData().baseColor;
 
             return -1;
         }, ModItems.WING);
@@ -52,22 +50,21 @@ public final class ClientEventHandler
     public static void handleElytraTooltips(@Nonnull ItemTooltipEvent event) {
         final @Nullable IElytraCapability cap = IElytraCapability.get(event.getItemStack());
         if(cap != null) {
-            if(cap.areWingsDuplicates()) TooltipHandler.addTooltip(cap.getLeftWing().getData(), event.getToolTip(), event.getFlags().isAdvanced());
+            if(cap.areWingsDuplicates()) cap.getLeftWing().getData().forEach(customization ->
+                    customization.addTooltip(event.getItemStack(), cap.getLeftWing().getData(), event.getToolTip(), event.getFlags().isAdvanced()));
+
             else {
                 final IWingCapability left = cap.getLeftWing();
                 final IWingCapability right = cap.getRightWing();
-                boolean addedLeftInfo = false;
 
-                if(left.getData().type != CustomizationType.NONE) {
+                if(left.getData().size() > 0) {
                     event.getToolTip().add(I18n.format("customizableelytra.tooltip.left"));
-                    TooltipHandler.addTooltip(left.getData(), event.getToolTip(), event.getFlags().isAdvanced());
-                    addedLeftInfo = true;
+                    left.getData().forEach(customization -> customization.addTooltip(event.getItemStack(), left.getData(), event.getToolTip(), event.getFlags().isAdvanced()));
                 }
 
-                if(right.getData().type != CustomizationType.NONE) {
-                    if(addedLeftInfo) event.getToolTip().add("");
+                if(right.getData().size() > 0) {
                     event.getToolTip().add(I18n.format("customizableelytra.tooltip.right"));
-                    TooltipHandler.addTooltip(right.getData(), event.getToolTip(), event.getFlags().isAdvanced());
+                    right.getData().forEach(customization -> customization.addTooltip(event.getItemStack(), right.getData(), event.getToolTip(), event.getFlags().isAdvanced()));
                 }
             }
         }

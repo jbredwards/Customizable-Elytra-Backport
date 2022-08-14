@@ -31,6 +31,9 @@ public interface IElytraCapability
 
     @Nonnull IWingCapability getLeftWing();
     @Nonnull IWingCapability getRightWing();
+    /**
+     * Used to determine whether to render the wing tooltips as separate or not
+     */
     boolean areWingsDuplicates();
 
     void setLeftWing(@Nonnull IWingCapability data);
