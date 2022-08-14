@@ -1,7 +1,7 @@
 package git.jbredwards.customizableelytra.mod;
 
-import git.jbredwards.customizableelytra.mod.common.capability.IElytraData;
-import git.jbredwards.customizableelytra.mod.common.capability.IWingData;
+import git.jbredwards.customizableelytra.mod.common.capability.IElytraCapability;
+import git.jbredwards.customizableelytra.mod.common.capability.IWingCapability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -18,7 +18,7 @@ public final class Main
 {
     @Mod.EventHandler
     static void preInit(@Nonnull FMLPreInitializationEvent event) {
-        CapabilityManager.INSTANCE.register(IElytraData.class, IElytraData.Storage.INSTANCE, IElytraData.Impl::new);
-        CapabilityManager.INSTANCE.register(IWingData.class, IWingData.Storage.INSTANCE, IWingData.Impl::new);
+        CapabilityManager.INSTANCE.register(IElytraCapability.class, IElytraCapability.Storage.INSTANCE, IElytraCapability.Impl::new);
+        CapabilityManager.INSTANCE.register(IWingCapability.class, IWingCapability.Storage.INSTANCE, IWingCapability.Impl::new);
     }
 }

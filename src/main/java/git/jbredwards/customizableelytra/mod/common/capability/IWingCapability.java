@@ -2,7 +2,6 @@ package git.jbredwards.customizableelytra.mod.common.capability;
 
 import git.jbredwards.customizableelytra.mod.Constants;
 import git.jbredwards.customizableelytra.mod.common.item.ItemElytraWing;
-import git.jbredwards.customizableelytra.mod.common.util.CustomizationType;
 import git.jbredwards.customizableelytra.mod.common.util.ElytraWingData;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
@@ -12,7 +11,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -27,16 +25,16 @@ import javax.annotation.Nullable;
  */
 @SuppressWarnings("ConstantConditions")
 @Mod.EventBusSubscriber(modid = Constants.MODID)
-public interface IWingData extends INBTSerializable<NBTTagCompound>
+public interface IWingCapability
 {
-    @CapabilityInject(IWingData.class)
-    @Nonnull Capability<IWingData> CAPABILITY = null;
+    @CapabilityInject(IWingCapability.class)
+    @Nonnull Capability<IWingCapability> CAPABILITY = null;
 
     @Nonnull ElytraWingData getData();
     void setData(@Nonnull ElytraWingData dataIn);
 
     @Nullable
-    static IWingData get(@Nullable ICapabilityProvider provider) {
+    static IWingCapability get(@Nullable ICapabilityProvider provider) {
         return provider.hasCapability(CAPABILITY, null) ? provider.getCapability(CAPABILITY, null) : null;
     }
 
@@ -46,7 +44,7 @@ public interface IWingData extends INBTSerializable<NBTTagCompound>
             event.addCapability(new ResourceLocation(Constants.MODID, "wing"), new CapabilityProvider<>(CAPABILITY));
     }
 
-    final class Impl implements IWingData
+    final class Impl implements IWingCapability
     {
         ElytraWingData data = new ElytraWingData();
 
@@ -56,38 +54,21 @@ public interface IWingData extends INBTSerializable<NBTTagCompound>
 
         @Override
         public void setData(@Nonnull ElytraWingData dataIn) { data = dataIn; }
-
-        @Nonnull
-        @Override
-        public NBTTagCompound serializeNBT() {
-            final NBTTagCompound nbt = new NBTTagCompound();
-            nbt.setInteger("Type", data.type.ordinal());
-            nbt.setInteger("Color", data.color);
-
-            return nbt;
-        }
-
-        @Override
-        public void deserializeNBT(@Nonnull NBTTagCompound nbt) {
-            data = new ElytraWingData();
-            data.type = CustomizationType.deserialize(nbt.getInteger("Type"));
-            data.color = nbt.getInteger("Color");
-        }
     }
 
-    enum Storage implements Capability.IStorage<IWingData>
+    enum Storage implements Capability.IStorage<IWingCapability>
     {
         INSTANCE;
 
         @Nonnull
         @Override
-        public NBTBase writeNBT(@Nonnull Capability<IWingData> capability, @Nonnull IWingData instance, @Nullable EnumFacing side) {
-            return instance.serializeNBT();
+        public NBTBase writeNBT(@Nonnull Capability<IWingCapability> capability, @Nonnull IWingCapability instance, @Nullable EnumFacing side) {
+            return instance.getData().serializeNBT();
         }
 
         @Override
-        public void readNBT(@Nonnull Capability<IWingData> capability, @Nonnull IWingData instance, @Nullable EnumFacing side, @Nullable NBTBase nbt) {
-            if(nbt instanceof NBTTagCompound) instance.deserializeNBT((NBTTagCompound)nbt);
+        public void readNBT(@Nonnull Capability<IWingCapability> capability, @Nonnull IWingCapability instance, @Nullable EnumFacing side, @Nullable NBTBase nbt) {
+            if(nbt instanceof NBTTagCompound) instance.getData().deserializeNBT((NBTTagCompound)nbt);
         }
     }
 }
