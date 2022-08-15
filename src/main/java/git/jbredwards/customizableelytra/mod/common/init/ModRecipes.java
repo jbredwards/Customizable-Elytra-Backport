@@ -24,6 +24,8 @@ public final class ModRecipes
             //customization
             .add(new RecipeDyeingElytra().setRegistryName(Constants.MODID, "dyeable_elytra"))
             .add(new RecipeDyeingElytraWing().setRegistryName(Constants.MODID, "dyeable_elytra_wings"))
+            .add(new RecipeGlassElytra().setRegistryName(Constants.MODID, "glass_elytra"))
+            .add(new RecipeGlassElytraWing().setRegistryName(Constants.MODID, "glass_elytra_wings"))
             .add(new RecipeGlowingElytra().setRegistryName(Constants.MODID, "glowing_elytra"))
             .add(new RecipeGlowingElytraWing().setRegistryName(Constants.MODID, "glowing_elytra_wings"))
             .build();

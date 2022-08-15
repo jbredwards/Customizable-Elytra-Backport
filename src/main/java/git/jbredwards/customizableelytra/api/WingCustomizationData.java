@@ -82,6 +82,8 @@ public final class WingCustomizationData implements INBTSerializable<NBTTagCompo
         }
     }
 
+    public boolean hasTag(@Nonnull String tag) { return tags.contains(tag); }
+
     @Nonnull
     public String getTagAt(int index) { return tags.get(index); }
 

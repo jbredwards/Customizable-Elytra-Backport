@@ -2,6 +2,8 @@ package git.jbredwards.customizableelytra.api.customizations;
 
 import git.jbredwards.customizableelytra.api.IWingCustomization;
 import git.jbredwards.customizableelytra.api.WingCustomizationData;
+import git.jbredwards.customizableelytra.mod.client.layer.LayerCustomizableElytra;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -34,15 +36,40 @@ public final class GlowingWingCustomization implements IWingCustomization
     @SideOnly(Side.CLIENT)
     @Override
     public void preRender(@Nonnull ItemStack stack, @Nonnull WingCustomizationData data, @Nonnull RenderPlayer renderer, @Nonnull AbstractClientPlayer entity, @Nonnull EnumHandSide wing, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-        GlStateManager.disableLighting();
-        prevLastBrightnessX = OpenGlHelper.lastBrightnessX;
-        prevLastBrightnessY = OpenGlHelper.lastBrightnessY;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 0);
+        if(!data.hasTag("Glass")) {
+            GlStateManager.disableLighting();
+            prevLastBrightnessX = OpenGlHelper.lastBrightnessX;
+            prevLastBrightnessY = OpenGlHelper.lastBrightnessY;
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 0);
+        }
     }
 
     @SideOnly(Side.CLIENT)
     @Override
     public void postRender(@Nonnull ItemStack stack, @Nonnull WingCustomizationData data, @Nonnull RenderPlayer renderer, @Nonnull AbstractClientPlayer entity, @Nonnull EnumHandSide wing, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, prevLastBrightnessX, prevLastBrightnessY);
+        if(!data.hasTag("Glass")) {
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, prevLastBrightnessX, prevLastBrightnessY);
+            GlStateManager.scale(1.002, 1.002, 1.002);
+            GlStateManager.depthMask(false);
+            GlStateManager.enableNormalize();
+            GlStateManager.enableBlend();
+            GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE);
+            GlStateManager.enableLighting();
+            Minecraft.getMinecraft().entityRenderer.setupFogColor(true);
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(-0.001, -0.001, -0.001);
+            LayerCustomizableElytra.renderModel(stack, data, renderer, entity, wing, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+            GlStateManager.translate(0.001, -0.001, -0.001);
+            GlStateManager.popMatrix();
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(0.001, 0.001, 0.001);
+            LayerCustomizableElytra.renderModel(stack, data, renderer, entity, wing, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+            GlStateManager.translate(-0.001, -0.001, -0.001);
+            GlStateManager.popMatrix();
+            Minecraft.getMinecraft().entityRenderer.setupFogColor(false);
+            GlStateManager.disableBlend();
+            GlStateManager.disableNormalize();
+            GlStateManager.depthMask(true);
+        }
     }
 }

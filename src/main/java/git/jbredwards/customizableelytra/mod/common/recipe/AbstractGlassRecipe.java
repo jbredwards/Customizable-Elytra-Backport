@@ -19,18 +19,18 @@ import javax.annotation.Nonnull;
  * @author jbred
  *
  */
-public abstract class AbstractGlowingRecipe extends AbstractDynamicRecipe
+public abstract class AbstractGlassRecipe extends AbstractDynamicRecipe
 {
     public abstract boolean isCustomizable(@Nonnull ItemStack stack);
-    public abstract void applyGlowingToStack(@Nonnull ItemStack stack);
-    public void applyGlowingToWing(@Nonnull IWingCapability cap) {
+    public abstract void applyGlassToStack(@Nonnull ItemStack stack);
+    public void applyGlassToWing(@Nonnull IWingCapability cap) {
         final WingCustomizationData data = WingCustomizationData.copyOf(cap.getData());
-        data.addCustomization(WingCustomizations.GLOWING);
+        data.addCustomization(WingCustomizations.GLASS);
         cap.setData(data);
     }
 
-    protected boolean isItemGlowstone(@Nonnull ItemStack stack) {
-        return ArrayUtils.contains(OreDictionary.getOreIDs(stack), OreDictionary.getOreID("dustGlowstone"));
+    protected boolean isItemGlass(@Nonnull ItemStack stack) {
+        return ArrayUtils.contains(OreDictionary.getOreIDs(stack), OreDictionary.getOreID("blockGlass"));
     }
 
     @Override
@@ -44,7 +44,7 @@ public abstract class AbstractGlowingRecipe extends AbstractDynamicRecipe
                     continue;
                 }
 
-                if(!foundGlowstone && isItemGlowstone(stack)) {
+                if(!foundGlowstone && isItemGlass(stack)) {
                     foundGlowstone = true;
                     continue;
                 }
@@ -71,7 +71,7 @@ public abstract class AbstractGlowingRecipe extends AbstractDynamicRecipe
             }
         }
 
-        applyGlowingToStack(elytra);
+        applyGlassToStack(elytra);
         return elytra;
     }
 
