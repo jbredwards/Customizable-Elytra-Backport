@@ -3,6 +3,7 @@ package git.jbredwards.customizableelytra.mod.common.recipe;
 import git.jbredwards.customizableelytra.api.customizations.WingCustomizations;
 import git.jbredwards.customizableelytra.mod.common.capability.IWingCapability;
 import git.jbredwards.customizableelytra.api.WingCustomizationData;
+import git.jbredwards.customizableelytra.mod.common.recipe.core.AbstractDynamicRecipe;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;

@@ -13,6 +13,7 @@ import net.minecraft.entity.player.EnumPlayerModelParts;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -28,11 +29,8 @@ import javax.annotation.Nullable;
 @SideOnly(Side.CLIENT)
 public class LayerCustomizableElytra implements LayerRenderer<AbstractClientPlayer>
 {
-    @Nonnull
-    protected static final ResourceLocation TEXTURE_ELYTRA = new ResourceLocation("textures/entity/elytra.png");
-
+    @Nonnull protected static final ResourceLocation TEXTURE_ELYTRA = new ResourceLocation("textures/entity/elytra.png");
     @Nonnull protected final RenderPlayer renderer;
-    @Nonnull protected final ModelElytra modelElytra = new ModelElytra();
 
     public LayerCustomizableElytra(@Nonnull RenderPlayer renderer) { this.renderer = renderer; }
 
@@ -42,30 +40,30 @@ public class LayerCustomizableElytra implements LayerRenderer<AbstractClientPlay
         final @Nullable IElytraCapability cap = IElytraCapability.get(stack);
 
         if(cap != null) {
-            renderWing(stack, cap.getLeftWing().getData(), modelElytra.rightWing, entity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
-            renderWing(stack, cap.getRightWing().getData(), modelElytra.leftWing, entity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+            renderWing(stack, cap.getLeftWing().getData(), entity, EnumHandSide.LEFT, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+            renderWing(stack, cap.getRightWing().getData(), entity, EnumHandSide.RIGHT, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
         }
     }
 
-    protected void renderWing(@Nonnull ItemStack stack, @Nonnull WingCustomizationData data, @Nonnull ModelRenderer wingModelToIgnore, @Nonnull AbstractClientPlayer entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    protected void renderWing(@Nonnull ItemStack stack, @Nonnull WingCustomizationData data, @Nonnull AbstractClientPlayer entity, @Nonnull EnumHandSide wing, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         GlStateManager.pushMatrix();
 
         //apply custom color
         boolean changedColor = false;
         for(int i = data.size() - 1; i >= 0; i--) {
-            final EnumActionResult result = data.getCustomizationAt(i).changeEquipmentColor(stack, data, entity);
+            final EnumActionResult result = data.getCustomizationAt(i).changeEquipmentColor(stack, data, entity, wing);
             if(result == EnumActionResult.PASS) continue;
             if(result == EnumActionResult.SUCCESS) changedColor = true;
             break;
         }
 
         //apply default color
-        if(!changedColor) GlStateManager.color(1, 1, 1);
+        if(!changedColor) GlStateManager.color(142f/255, 142f/255, 164f/255);
 
         //apply custom texture
         boolean changedTexture = false;
         for(int i = data.size() - 1; i >= 0; i--) {
-            final EnumActionResult result = data.getCustomizationAt(i).changeTexture(stack, data, entity, renderer::bindTexture);
+            final EnumActionResult result = data.getCustomizationAt(i).changeTexture(stack, data, entity, wing, renderer::bindTexture);
             if(result == EnumActionResult.PASS) continue;
             if(result == EnumActionResult.SUCCESS) changedTexture = true;
             break;
@@ -85,26 +83,46 @@ public class LayerCustomizableElytra implements LayerRenderer<AbstractClientPlay
         GlStateManager.pushMatrix();
         GlStateManager.translate(0, 0, 0.125);
 
+        //run pre-renderers
+        for(int i = data.size() - 1; i >= 0; i--)
+            data.getCustomizationAt(i).preRender(stack, data, renderer, entity, wing, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+
+        //run model renderers
+        renderModel(stack, data, renderer, entity, wing, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+
+        //run post-renderers
+        for(int i = data.size() - 1; i >= 0; i--)
+            data.getCustomizationAt(i).postRender(stack, data, renderer, entity, wing, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+
+        GlStateManager.popMatrix();
+        GlStateManager.popMatrix();
+    }
+
+    public static void renderModel(@Nonnull ItemStack stack, @Nonnull WingCustomizationData data, @Nonnull RenderPlayer renderer, @Nonnull AbstractClientPlayer entity, @Nonnull EnumHandSide wing, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+        //let customizations render custom models
+        for(int i = data.size() - 1; i >= 0; i--)
+            data.getCustomizationAt(i).renderModel(stack, data, renderer, entity, wing, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+
+        //default model rendering
+        final ModelElytra model = new ModelElytra();
+        final ModelRenderer wingModelToIgnore = (wing == EnumHandSide.LEFT ? model.rightWing : model.leftWing);
         final boolean prevIsHidden = wingModelToIgnore.isHidden;
         wingModelToIgnore.isHidden = true;
 
-        modelElytra.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entity);
-        modelElytra.render(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+        model.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entity);
+        model.render(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
 
         if(stack.isItemEnchanted()) {
             setupQuarkGlint(stack);
-            LayerArmorBase.renderEnchantedGlint(renderer, entity, modelElytra, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+            LayerArmorBase.renderEnchantedGlint(renderer, entity, model, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
         }
 
         wingModelToIgnore.isHidden = prevIsHidden;
-
-        GlStateManager.popMatrix();
-        GlStateManager.popMatrix();
     }
 
     @Override
     public boolean shouldCombineTextures() { return false; }
 
     //sets up the quark enchantment glint if it's installed
-    protected void setupQuarkGlint(@Nonnull ItemStack stack) { }
+    public static void setupQuarkGlint(@Nonnull ItemStack stack) { }
 }

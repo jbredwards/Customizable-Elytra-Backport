@@ -1,4 +1,4 @@
-package git.jbredwards.customizableelytra.mod.common.recipe;
+package git.jbredwards.customizableelytra.mod.common.recipe.core;
 
 import git.jbredwards.customizableelytra.mod.common.capability.IElytraCapability;
 import git.jbredwards.customizableelytra.mod.common.capability.IWingCapability;

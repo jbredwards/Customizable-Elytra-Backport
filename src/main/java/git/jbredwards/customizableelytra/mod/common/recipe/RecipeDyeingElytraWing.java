@@ -14,13 +14,10 @@ import java.util.List;
  * @author jbred
  *
  */
-public class RecipeElytraWingDyeing extends AbstractDyeingRecipe
+public class RecipeDyeingElytraWing extends AbstractDyeingRecipe
 {
     @Override
-    public boolean isDyeableTarget(@Nonnull ItemStack stack) {
-        final @Nullable IWingCapability cap = IWingCapability.get(stack);
-        return cap != null;
-    }
+    public boolean isDyeableTarget(@Nonnull ItemStack stack) { return IWingCapability.get(stack) != null; }
 
     @Override
     public void applyDyesToStack(@Nonnull ItemStack stack, @Nonnull List<EnumDyeColor> dyes) {

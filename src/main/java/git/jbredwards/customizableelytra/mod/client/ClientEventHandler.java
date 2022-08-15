@@ -30,8 +30,10 @@ public final class ClientEventHandler
         event.getItemColors().registerItemColorHandler((stack, tintIndex) -> {
             final @Nullable IElytraCapability cap = IElytraCapability.get(stack);
             if(cap != null) switch(tintIndex) {
-                case 0: return cap.getLeftWing().getData().baseColor;
-                case 1: return cap.getRightWing().getData().baseColor;
+                case 0: return cap.getLeftWing().getData().baseColor != -1
+                        ? cap.getLeftWing().getData().baseColor : 9342628;
+                case 1: return cap.getRightWing().getData().baseColor != -1
+                        ? cap.getRightWing().getData().baseColor : 9342628;
             }
 
             return -1;
@@ -40,7 +42,8 @@ public final class ClientEventHandler
         //set elytra wing color handler
         event.getItemColors().registerItemColorHandler((stack, tintIndex) -> {
             final @Nullable IWingCapability cap = IWingCapability.get(stack);
-            if(cap != null) return cap.getData().baseColor;
+            if(cap != null) return cap.getData().baseColor != -1
+                    ? cap.getData().baseColor : 9342628;
 
             return -1;
         }, ModItems.WING);

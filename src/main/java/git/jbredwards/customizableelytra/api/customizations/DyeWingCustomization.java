@@ -8,6 +8,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.relauncher.Side;
@@ -40,7 +41,7 @@ public final class DyeWingCustomization implements IWingCustomization
     @Nonnull
     @SideOnly(Side.CLIENT)
     @Override
-    public EnumActionResult changeEquipmentColor(@Nonnull ItemStack stack, @Nonnull WingCustomizationData data, @Nonnull AbstractClientPlayer entity) {
+    public EnumActionResult changeEquipmentColor(@Nonnull ItemStack stack, @Nonnull WingCustomizationData data, @Nonnull AbstractClientPlayer entity, @Nonnull EnumHandSide wing) {
         final float[] rgb = new Color(dyeColor).getRGBColorComponents(new float[3]);
         GlStateManager.color(rgb[0], rgb[1], rgb[2]);
         return EnumActionResult.SUCCESS;

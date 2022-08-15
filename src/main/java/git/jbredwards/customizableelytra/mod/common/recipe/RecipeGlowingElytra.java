@@ -2,32 +2,27 @@ package git.jbredwards.customizableelytra.mod.common.recipe;
 
 import git.jbredwards.customizableelytra.mod.common.capability.IElytraCapability;
 import net.minecraft.init.Items;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 
 /**
- * Lets players dye their elytra like leather armor
+ * Lets players make their elytra glow
  * @author jbred
  *
  */
-public class RecipeElytraDyeing extends AbstractDyeingRecipe
+public class RecipeGlowingElytra extends AbstractGlowingRecipe
 {
     @Override
-    public boolean isDyeableTarget(@Nonnull ItemStack stack) {
-        final @Nullable IElytraCapability cap = IElytraCapability.get(stack);
-        return cap != null;
-    }
+    public boolean isCustomizable(@Nonnull ItemStack stack) { return IElytraCapability.get(stack) != null; }
 
     @Override
-    public void applyDyesToStack(@Nonnull ItemStack stack, @Nonnull List<EnumDyeColor> dyes) {
+    public void applyGlowingToStack(@Nonnull ItemStack stack) {
         final @Nullable IElytraCapability cap = IElytraCapability.get(stack);
         if(cap != null) {
-            applyDyesToWing(cap.getLeftWing(), dyes);
-            applyDyesToWing(cap.getRightWing(), dyes);
+            applyGlowingToWing(cap.getLeftWing());
+            applyGlowingToWing(cap.getRightWing());
         }
     }
 

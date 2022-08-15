@@ -1,9 +1,11 @@
 package git.jbredwards.customizableelytra.api;
 
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -22,8 +24,12 @@ public interface IWingCustomization
     /**
      * Always used instead of a null value
      */
-    @Nonnull IWingCustomization NONE = new IWingCustomization() {
+    @Nonnull
+    IWingCustomization NONE = new IWingCustomization() {
         public boolean isValid(@Nonnull WingCustomizationData data) { return false; }
+
+        @SideOnly(Side.CLIENT)
+        public void addTooltip(@Nonnull ItemStack stack, @Nonnull WingCustomizationData data, @Nonnull List<String> tooltip, boolean advanced) { }
     };
 
     /**
@@ -50,17 +56,26 @@ public interface IWingCustomization
     //===============================
 
     @SideOnly(Side.CLIENT)
-    default void addTooltip(@Nonnull ItemStack stack, @Nonnull WingCustomizationData data, @Nonnull List<String> tooltip, boolean advanced) {}
+    void addTooltip(@Nonnull ItemStack stack, @Nonnull WingCustomizationData data, @Nonnull List<String> tooltip, boolean advanced);
 
     @Nonnull
     @SideOnly(Side.CLIENT)
-    default EnumActionResult changeEquipmentColor(@Nonnull ItemStack stack, @Nonnull WingCustomizationData data, @Nonnull AbstractClientPlayer entity) {
+    default EnumActionResult changeEquipmentColor(@Nonnull ItemStack stack, @Nonnull WingCustomizationData data, @Nonnull AbstractClientPlayer entity, @Nonnull EnumHandSide wing) {
         return EnumActionResult.PASS;
     }
 
     @Nonnull
     @SideOnly(Side.CLIENT)
-    default EnumActionResult changeTexture(@Nonnull ItemStack stack, @Nonnull WingCustomizationData data, @Nonnull AbstractClientPlayer entity, @Nonnull Consumer<ResourceLocation> textureBinder) {
+    default EnumActionResult changeTexture(@Nonnull ItemStack stack, @Nonnull WingCustomizationData data, @Nonnull AbstractClientPlayer entity, @Nonnull EnumHandSide wing, @Nonnull Consumer<ResourceLocation> textureBinder) {
         return EnumActionResult.PASS;
     }
+
+    @SideOnly(Side.CLIENT)
+    default void preRender(@Nonnull ItemStack stack, @Nonnull WingCustomizationData data, @Nonnull RenderPlayer renderer, @Nonnull AbstractClientPlayer entity, @Nonnull EnumHandSide wing, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {}
+
+    @SideOnly(Side.CLIENT)
+    default void renderModel(@Nonnull ItemStack stack, @Nonnull WingCustomizationData data, @Nonnull RenderPlayer renderer, @Nonnull AbstractClientPlayer entity, @Nonnull EnumHandSide wing, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {}
+
+    @SideOnly(Side.CLIENT)
+    default void postRender(@Nonnull ItemStack stack, @Nonnull WingCustomizationData data, @Nonnull RenderPlayer renderer, @Nonnull AbstractClientPlayer entity, @Nonnull EnumHandSide wing, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {}
 }

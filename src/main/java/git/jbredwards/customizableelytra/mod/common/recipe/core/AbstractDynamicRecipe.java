@@ -1,4 +1,4 @@
-package git.jbredwards.customizableelytra.mod.common.recipe;
+package git.jbredwards.customizableelytra.mod.common.recipe.core;
 
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.registries.IForgeRegistryEntry;
