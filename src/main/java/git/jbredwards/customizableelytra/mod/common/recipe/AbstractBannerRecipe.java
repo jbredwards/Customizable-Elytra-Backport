@@ -29,8 +29,8 @@ public abstract class AbstractBannerRecipe extends AbstractDynamicRecipe
     public abstract void applyBannerToStack(@Nonnull ItemStack stack, @Nonnull NBTTagList patterns, @Nonnull EnumDyeColor bannerColor);
     public void applyBannerToWing(@Nonnull IWingCapability cap, @Nonnull NBTTagList patterns, @Nonnull EnumDyeColor bannerColor) {
         final WingCustomizationData data = WingCustomizationData.copyOf(cap.getData());
-        data.addCustomization("Banner", new BannerWingCustomization(patterns, bannerColor));
-        cap.setData(data);
+        if(data.addCustomization("Banner", new BannerWingCustomization(patterns, bannerColor)))
+            cap.setData(data);
     }
 
     @Override

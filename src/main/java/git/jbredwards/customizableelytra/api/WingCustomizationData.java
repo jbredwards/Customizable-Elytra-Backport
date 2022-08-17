@@ -91,23 +91,45 @@ public final class WingCustomizationData implements INBTSerializable<NBTTagCompo
     public IWingCustomization getCustomizationAt(int index) { return customizations.get(index); }
 
     /**
+     * @return true if the customization is safe to add
+     */
+    public boolean isCompatible(@Nonnull WingCustomizationEntry customization) {
+        return isCompatible(customization.generator.get());
+    }
+
+    /**
+     * @return true if the customization is safe to add
+     */
+    public boolean isCompatible(@Nonnull IWingCustomization customization) {
+        for(IWingCustomization other : customizations) {
+            if(customization.isConflictingWith(this, other) || other.isConflictingWith(this, customization))
+                return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Should only be called during construction
      */
-    public void addCustomization(@Nonnull String key, @Nonnull IWingCustomization customization) {
-        if(customization.isValid(this)) {
+    public boolean addCustomization(@Nonnull String key, @Nonnull IWingCustomization customization) {
+        if(customization.isValid(this) && isCompatible(customization)) {
             if(tags.contains(key)) remove(tags.indexOf(key));
             customizations.add(customization);
             tags.add(key);
 
             customization.onAddedToData(this);
+            return true;
         }
+
+        return false;
     }
 
     /**
      * Adds an empty instance of the customization entry, should only be called during construction
      */
-    public void addCustomization(@Nonnull WingCustomizationEntry entry) {
-        addCustomization(entry.tagName, entry.generator.get());
+    public boolean addCustomization(@Nonnull WingCustomizationEntry entry) {
+        return addCustomization(entry.tagName, entry.generator.get());
     }
 
     /**

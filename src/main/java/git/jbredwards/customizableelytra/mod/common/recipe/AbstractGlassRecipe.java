@@ -26,8 +26,7 @@ public abstract class AbstractGlassRecipe extends AbstractDynamicRecipe
     public abstract void applyGlassToStack(@Nonnull ItemStack stack);
     public void applyGlassToWing(@Nonnull IWingCapability cap) {
         final WingCustomizationData data = WingCustomizationData.copyOf(cap.getData());
-        data.addCustomization(WingCustomizations.GLASS);
-        cap.setData(data);
+        if(data.addCustomization(WingCustomizations.GLASS)) cap.setData(data);
     }
 
     protected boolean isItemGlass(@Nonnull ItemStack stack) {

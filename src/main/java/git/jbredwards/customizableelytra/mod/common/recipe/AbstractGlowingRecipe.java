@@ -26,8 +26,7 @@ public abstract class AbstractGlowingRecipe extends AbstractDynamicRecipe
     public abstract void applyGlowingToStack(@Nonnull ItemStack stack);
     public void applyGlowingToWing(@Nonnull IWingCapability cap) {
         final WingCustomizationData data = WingCustomizationData.copyOf(cap.getData());
-        data.addCustomization(WingCustomizations.GLOWING);
-        cap.setData(data);
+        if(data.addCustomization(WingCustomizations.GLOWING)) cap.setData(data);
     }
 
     protected boolean isItemGlowstone(@Nonnull ItemStack stack) {

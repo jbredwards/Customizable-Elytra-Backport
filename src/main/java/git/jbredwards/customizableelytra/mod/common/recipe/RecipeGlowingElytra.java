@@ -1,5 +1,6 @@
 package git.jbredwards.customizableelytra.mod.common.recipe;
 
+import git.jbredwards.customizableelytra.api.customizations.WingCustomizations;
 import git.jbredwards.customizableelytra.mod.common.capability.IElytraCapability;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -15,7 +16,12 @@ import javax.annotation.Nullable;
 public class RecipeGlowingElytra extends AbstractGlowingRecipe
 {
     @Override
-    public boolean isCustomizable(@Nonnull ItemStack stack) { return IElytraCapability.get(stack) != null; }
+    public boolean isCustomizable(@Nonnull ItemStack stack) {
+        final @Nullable IElytraCapability cap = IElytraCapability.get(stack);
+        return cap != null
+                && (cap.getLeftWing().getData().isCompatible(WingCustomizations.GLASS)
+                || cap.getRightWing().getData().isCompatible(WingCustomizations.GLASS));
+    }
 
     @Override
     public void applyGlowingToStack(@Nonnull ItemStack stack) {

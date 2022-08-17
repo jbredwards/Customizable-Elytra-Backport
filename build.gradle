@@ -23,6 +23,30 @@ minecraft {
     makeObfSourceJar = false
 }
 
+dependencies {
+    //jei
+    deobfProvided "mezz.jei:jei_1.12.2:${jei_version}"
+    runtime       "mezz.jei:jei_1.12.2:${jei_version}"
+    //quark
+    deobfCompile 'com.github.VazkiiMods:Quark:1.12-SNAPSHOT'
+}
+
+repositories {
+    maven {
+        //location of the maven that hosts JEI files
+        name = 'Progwml6 maven'
+        url = 'http://dvs1.progwml6.com/files/maven'
+    }
+    maven {
+        //location of a maven mirror for JEI files, as a fallback
+        name = 'ModMaven'
+        url = 'modmaven.k-4u.nl'
+    }
+
+    //quark
+    maven { url 'https://jitpack.io' }
+}
+
 processResources {
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version

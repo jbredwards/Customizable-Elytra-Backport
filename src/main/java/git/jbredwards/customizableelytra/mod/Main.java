@@ -84,8 +84,6 @@ public final class Main
                 ((List<LayerRenderer<?>>)(Object)renderer.layerRenderers).removeIf(layer -> layer instanceof LayerElytra);
                 renderer.addLayer(new LayerCustomizableElytra(renderer));
             });
-
-            super.init();
         }
     }
 }

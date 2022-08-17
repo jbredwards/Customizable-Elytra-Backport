@@ -1,7 +1,6 @@
 package git.jbredwards.customizableelytra.api;
 
 import net.minecraft.client.renderer.entity.RenderLivingBase;
-import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -36,7 +35,15 @@ public interface IWingCustomization
     /**
      * Called when this is washed with a cauldron, the data passed in is mutable and has yet to be assigned to the capability
      */
-    default void onWash(@Nonnull WingCustomizationData data) { data.removeLast(); }
+    default boolean onWash(@Nonnull WingCustomizationData data) {
+        data.removeLast();
+        return true;
+    }
+
+    /**
+     * @return false if the two customizations are compatible
+     */
+    default boolean isConflictingWith(@Nonnull WingCustomizationData data, @Nonnull IWingCustomization other) { return false; }
 
     /**
      * If a customization is invalid, it can't influence rendering,  display its tooltip, or be saved/loaded
@@ -45,7 +52,6 @@ public interface IWingCustomization
 
     /**
      * Called when this is applied to an elytra wing, the data passed in is mutable and has yet to be assigned to the capability
-     * TODO, banner customizations will use this to change baseColor
      */
     default void onAddedToData(@Nonnull WingCustomizationData data) { }
 

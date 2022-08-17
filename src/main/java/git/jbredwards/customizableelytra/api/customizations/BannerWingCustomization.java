@@ -103,9 +103,10 @@ public final class BannerWingCustomization implements IWingCustomization
     }
 
     @Override
-    public void onWash(@Nonnull WingCustomizationData data) {
+    public boolean onWash(@Nonnull WingCustomizationData data) {
         if(patterns.tagCount() <= 1) data.removeLast();
         else patterns.removeTag(patterns.tagCount() - 1);
+        return true;
     }
 
     @Override

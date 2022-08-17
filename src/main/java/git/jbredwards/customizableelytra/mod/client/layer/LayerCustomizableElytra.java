@@ -17,8 +17,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import vazkii.quark.misc.feature.ColorRunes;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,8 +33,12 @@ import javax.annotation.Nullable;
 @SideOnly(Side.CLIENT)
 public class LayerCustomizableElytra implements LayerRenderer<EntityLivingBase>
 {
-    @Nonnull protected static final ResourceLocation TEXTURE_ELYTRA = new ResourceLocation("textures/entity/elytra.png");
-    @Nonnull protected final RenderLivingBase<?> renderer;
+    @Nonnull
+    protected static final ResourceLocation TEXTURE_ELYTRA = new ResourceLocation("textures/entity/elytra.png");
+    protected static final boolean isQuarkInstalled = Loader.isModLoaded("quark");
+
+    @Nonnull
+    protected final RenderLivingBase<?> renderer;
 
     public LayerCustomizableElytra(@Nonnull RenderLivingBase<?> renderer) { this.renderer = renderer; }
 
@@ -141,7 +147,7 @@ public class LayerCustomizableElytra implements LayerRenderer<EntityLivingBase>
             model.render(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
 
             if(stack.isItemEnchanted()) {
-                setupQuarkGlint(stack);
+                if(isQuarkInstalled) ColorRunes.setTargetStack(stack);
                 LayerArmorBase.renderEnchantedGlint(renderer, entity, model, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
             }
         }
@@ -149,7 +155,4 @@ public class LayerCustomizableElytra implements LayerRenderer<EntityLivingBase>
 
     @Override
     public boolean shouldCombineTextures() { return false; }
-
-    //sets up the quark enchantment glint if it's installed
-    public static void setupQuarkGlint(@Nonnull ItemStack stack) { }
 }

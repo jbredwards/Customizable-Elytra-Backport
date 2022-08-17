@@ -46,7 +46,8 @@ public interface IWingCapability
     @SubscribeEvent
     static void attach(@Nonnull AttachCapabilitiesEvent<ItemStack> event) {
         if(event.getObject().getItem() instanceof ItemElytraWing)
-            event.addCapability(new ResourceLocation(Constants.MODID, "wing"), new CapabilityProvider<>(CAPABILITY));
+            event.addCapability(new ResourceLocation(Constants.MODID, "wing"),
+                    new CapabilityProvider<>(() -> CAPABILITY, new Impl()));
     }
 
     final class Impl implements IWingCapability

@@ -32,8 +32,8 @@ public abstract class AbstractDyeingRecipe extends AbstractDynamicRecipe
     public void applyDyesToWing(@Nonnull IWingCapability cap, @Nonnull List<EnumDyeColor> dyes) {
         if(!cap.getData().hasTag("Banner")) {
             final WingCustomizationData data = WingCustomizationData.copyOf(cap.getData());
-            data.addCustomization("Dye", new DyeWingCustomization(getResultDyeColor(data.baseColor, dyes)));
-            cap.setData(data);
+            if(data.addCustomization("Dye", new DyeWingCustomization(getResultDyeColor(data.baseColor, dyes))))
+                cap.setData(data);
         }
     }
 

@@ -65,7 +65,8 @@ public class ItemElytraWing extends Item
     public static boolean wash(@Nullable IWingCapability cap) {
         if(cap != null && cap.getData().size() > 0) {
             final WingCustomizationData data = WingCustomizationData.copyOf(cap.getData());
-            data.getCustomizationAt(data.size() - 1).onWash(data);
+            if(!data.getCustomizationAt(data.size() - 1).onWash(data)) return false;
+
             cap.setData(data);
             return true;
         }

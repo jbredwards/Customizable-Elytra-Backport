@@ -7,6 +7,7 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 /**
  * A general purpose capability provider class
@@ -15,33 +16,29 @@ import javax.annotation.Nullable;
  */
 public final class CapabilityProvider<T> implements ICapabilitySerializable<NBTBase>
 {
-    @Nonnull final Capability<T> capability;
-    @Nullable final T instance;
+    @Nonnull final Supplier<Capability<T>> capability;
+    @Nonnull final T instance;
 
-    public CapabilityProvider(@Nonnull Capability<T> capabilityIn) {
-        this(capabilityIn, capabilityIn.getDefaultInstance());
-    }
-
-    public CapabilityProvider(@Nonnull Capability<T> capabilityIn, @Nullable T instanceIn) {
+    public CapabilityProvider(@Nonnull Supplier<Capability<T>> capabilityIn, @Nonnull T instanceIn) {
         capability = capabilityIn;
         instance = instanceIn;
     }
 
     @Override
     public boolean hasCapability(@Nonnull Capability<?> capabilityIn, @Nullable EnumFacing facing) {
-        return capabilityIn == capability;
+        return capabilityIn == capability.get();
     }
 
     @Nullable
     @Override
     public <t> t getCapability(@Nonnull Capability<t> capabilityIn, @Nullable EnumFacing facing) {
-        return capabilityIn == capability ? capability.cast(instance) : null;
+        return capabilityIn == capability.get() ? capability.get().cast(instance) : null;
     }
 
     @Nullable
     @Override
-    public NBTBase serializeNBT() { return capability.writeNBT(instance, null); }
+    public NBTBase serializeNBT() { return capability.get().writeNBT(instance, null); }
 
     @Override
-    public void deserializeNBT(@Nonnull NBTBase nbt) { capability.readNBT(instance, null, nbt); }
+    public void deserializeNBT(@Nonnull NBTBase nbt) { capability.get().readNBT(instance, null, nbt); }
 }

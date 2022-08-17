@@ -1,5 +1,6 @@
 package git.jbredwards.customizableelytra.mod.common.recipe;
 
+import git.jbredwards.customizableelytra.api.customizations.WingCustomizations;
 import git.jbredwards.customizableelytra.mod.common.capability.IElytraCapability;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
@@ -20,8 +21,8 @@ public class RecipeDyeingElytra extends AbstractDyeingRecipe
     public boolean isDyeableTarget(@Nonnull ItemStack stack) {
         final @Nullable IElytraCapability cap = IElytraCapability.get(stack);
         return cap != null
-                && (!cap.getLeftWing().getData().hasTag("Banner")
-                || !cap.getRightWing().getData().hasTag("Banner"));
+                && (!cap.getLeftWing().getData().hasTag("Banner") && cap.getLeftWing().getData().isCompatible(WingCustomizations.DYE)
+                || !cap.getRightWing().getData().hasTag("Banner") && cap.getRightWing().getData().isCompatible(WingCustomizations.DYE));
     }
 
     @Override

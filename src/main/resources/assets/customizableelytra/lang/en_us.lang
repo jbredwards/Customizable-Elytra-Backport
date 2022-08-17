@@ -2,6 +2,7 @@
 item.customizableelytra.wing.name=Elytra Wing
 #tooltips
 customizableelytra.tooltip.left=Left Wing:
+customizableelytra.tooltip.dragon=Dragon Curse
 customizableelytra.tooltip.glass=Glass
 customizableelytra.tooltip.glowing=Glowing
 customizableelytra.tooltip.right=Right Wing:

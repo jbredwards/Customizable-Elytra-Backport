@@ -3,8 +3,7 @@ package git.jbredwards.customizableelytra.mod.common.init;
 import com.google.common.collect.ImmutableList;
 import git.jbredwards.customizableelytra.mod.Constants;
 import git.jbredwards.customizableelytra.mod.common.recipe.*;
-import git.jbredwards.customizableelytra.mod.common.recipe.core.RecipeElytraWingStitching;
-import git.jbredwards.customizableelytra.mod.common.recipe.core.RecipeElytraWingSwap;
+import git.jbredwards.customizableelytra.mod.common.recipe.core.*;
 import net.minecraft.item.crafting.IRecipe;
 
 import javax.annotation.Nonnull;
@@ -21,6 +20,7 @@ public final class ModRecipes
             //core
             .add(new RecipeElytraWingStitching().setRegistryName(Constants.MODID, "elytra_wing_switching"))
             .add(new RecipeElytraWingSwap().setRegistryName(Constants.MODID, "elytra_wing_swap"))
+            .add(new RecipeElytraWings().setRegistryName(Constants.MODID, "elytra_wings"))
             //customization
             .add(new RecipeBannerElytra().setRegistryName(Constants.MODID, "banner_elytra"))
             .add(new RecipeBannerElytraWing().setRegistryName(Constants.MODID, "banner_elytra_wings"))

@@ -1,7 +1,9 @@
 package git.jbredwards.customizableelytra.mod.common.capability;
 
 import git.jbredwards.customizableelytra.mod.Constants;
+import git.jbredwards.customizableelytra.mod.common.init.ModItems;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -40,6 +42,9 @@ public interface IElytraCapability
     void setRightWing(@Nonnull IWingCapability data);
     void setAreWingsDuplicates(boolean flag);
 
+    @Nonnull
+    default Item getWingItem() { return ModItems.WING; }
+
     @Nullable
     static IElytraCapability get(@Nullable ICapabilityProvider provider) {
         return provider.hasCapability(CAPABILITY, null) ? provider.getCapability(CAPABILITY, null) : null;
@@ -48,7 +53,8 @@ public interface IElytraCapability
     @SubscribeEvent
     static void attach(@Nonnull AttachCapabilitiesEvent<ItemStack> event) {
         if(event.getObject().getItem() == Items.ELYTRA)
-            event.addCapability(new ResourceLocation(Constants.MODID, "elytra"), new CapabilityProvider<>(CAPABILITY));
+            event.addCapability(new ResourceLocation(Constants.MODID, "elytra"),
+                    new CapabilityProvider<>(() -> CAPABILITY, new Impl()));
     }
 
     final class Impl implements IElytraCapability
