@@ -4,11 +4,11 @@ import git.jbredwards.customizableelytra.api.IWingCustomization;
 import git.jbredwards.customizableelytra.api.WingCustomizationData;
 import git.jbredwards.customizableelytra.mod.client.layer.LayerCustomizableElytra;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
 import net.minecraftforge.fml.relauncher.Side;
@@ -35,7 +35,7 @@ public final class GlowingWingCustomization implements IWingCustomization
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void preRender(@Nonnull ItemStack stack, @Nonnull WingCustomizationData data, @Nonnull RenderPlayer renderer, @Nonnull AbstractClientPlayer entity, @Nonnull EnumHandSide wing, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    public void preRender(@Nonnull ItemStack stack, @Nonnull WingCustomizationData data, @Nonnull RenderLivingBase<?> renderer, @Nonnull EntityLivingBase entity, @Nonnull EnumHandSide wing, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         if(!data.hasTag("Glass")) {
             GlStateManager.disableLighting();
             prevLastBrightnessX = OpenGlHelper.lastBrightnessX;
@@ -46,12 +46,11 @@ public final class GlowingWingCustomization implements IWingCustomization
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void postRender(@Nonnull ItemStack stack, @Nonnull WingCustomizationData data, @Nonnull RenderPlayer renderer, @Nonnull AbstractClientPlayer entity, @Nonnull EnumHandSide wing, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    public void postRender(@Nonnull ItemStack stack, @Nonnull WingCustomizationData data, @Nonnull RenderLivingBase<?> renderer, @Nonnull EntityLivingBase entity, @Nonnull EnumHandSide wing, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         if(!data.hasTag("Glass")) {
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, prevLastBrightnessX, prevLastBrightnessY);
             GlStateManager.scale(1.002, 1.002, 1.002);
             GlStateManager.depthMask(false);
-            GlStateManager.enableNormalize();
             GlStateManager.enableBlend();
             GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE);
             GlStateManager.enableLighting();
@@ -59,7 +58,7 @@ public final class GlowingWingCustomization implements IWingCustomization
             GlStateManager.pushMatrix();
             GlStateManager.translate(-0.001, -0.001, -0.001);
             LayerCustomizableElytra.renderModel(stack, data, renderer, entity, wing, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
-            GlStateManager.translate(0.001, -0.001, -0.001);
+            GlStateManager.translate(0.001, 0.001, 0.001);
             GlStateManager.popMatrix();
             GlStateManager.pushMatrix();
             GlStateManager.translate(0.001, 0.001, 0.001);
@@ -68,7 +67,6 @@ public final class GlowingWingCustomization implements IWingCustomization
             GlStateManager.popMatrix();
             Minecraft.getMinecraft().entityRenderer.setupFogColor(false);
             GlStateManager.disableBlend();
-            GlStateManager.disableNormalize();
             GlStateManager.depthMask(true);
         }
     }

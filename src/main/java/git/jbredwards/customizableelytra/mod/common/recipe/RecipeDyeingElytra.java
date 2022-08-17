@@ -17,7 +17,12 @@ import java.util.List;
 public class RecipeDyeingElytra extends AbstractDyeingRecipe
 {
     @Override
-    public boolean isDyeableTarget(@Nonnull ItemStack stack) { return IElytraCapability.get(stack) != null; }
+    public boolean isDyeableTarget(@Nonnull ItemStack stack) {
+        final @Nullable IElytraCapability cap = IElytraCapability.get(stack);
+        return cap != null
+                && (!cap.getLeftWing().getData().hasTag("Banner")
+                || !cap.getRightWing().getData().hasTag("Banner"));
+    }
 
     @Override
     public void applyDyesToStack(@Nonnull ItemStack stack, @Nonnull List<EnumDyeColor> dyes) {

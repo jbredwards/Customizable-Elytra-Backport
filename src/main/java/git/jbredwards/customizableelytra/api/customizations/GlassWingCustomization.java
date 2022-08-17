@@ -2,10 +2,10 @@ package git.jbredwards.customizableelytra.api.customizations;
 
 import git.jbredwards.customizableelytra.api.IWingCustomization;
 import git.jbredwards.customizableelytra.api.WingCustomizationData;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
 import net.minecraftforge.fml.relauncher.Side;
@@ -29,7 +29,7 @@ public final class GlassWingCustomization implements IWingCustomization
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void preRender(@Nonnull ItemStack stack, @Nonnull WingCustomizationData data, @Nonnull RenderPlayer renderer, @Nonnull AbstractClientPlayer entity, @Nonnull EnumHandSide wing, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    public void preRender(@Nonnull ItemStack stack, @Nonnull WingCustomizationData data, @Nonnull RenderLivingBase<?> renderer, @Nonnull EntityLivingBase entity, @Nonnull EnumHandSide wing, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         GlStateManager.color(GlStateManager.colorState.red, GlStateManager.colorState.green, GlStateManager.colorState.blue, 0.5f);
         GlStateManager.depthMask(false);
         GlStateManager.enableNormalize();
@@ -40,7 +40,7 @@ public final class GlassWingCustomization implements IWingCustomization
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void postRender(@Nonnull ItemStack stack, @Nonnull WingCustomizationData data, @Nonnull RenderPlayer renderer, @Nonnull AbstractClientPlayer entity, @Nonnull EnumHandSide wing, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    public void postRender(@Nonnull ItemStack stack, @Nonnull WingCustomizationData data, @Nonnull RenderLivingBase<?> renderer, @Nonnull EntityLivingBase entity, @Nonnull EnumHandSide wing, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         GlStateManager.disableBlend();
         GlStateManager.disableNormalize();
         GlStateManager.depthMask(true);

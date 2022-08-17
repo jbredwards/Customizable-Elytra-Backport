@@ -94,11 +94,12 @@ public final class WingCustomizationData implements INBTSerializable<NBTTagCompo
      * Should only be called during construction
      */
     public void addCustomization(@Nonnull String key, @Nonnull IWingCustomization customization) {
-        customization.onAddedToData(this);
         if(customization.isValid(this)) {
             if(tags.contains(key)) remove(tags.indexOf(key));
             customizations.add(customization);
             tags.add(key);
+
+            customization.onAddedToData(this);
         }
     }
 
@@ -113,6 +114,11 @@ public final class WingCustomizationData implements INBTSerializable<NBTTagCompo
      * Should only be called during construction
      */
     public void remove(int index) {
+        for(int i = size() - 1; i >= 0; i--) {
+            final IWingCustomization customization = getCustomizationAt(i);
+            if(customization.isValid(this)) customization.onDataRemoved(this, i == index);
+        }
+
         customizations.remove(index);
         tags.remove(index);
     }

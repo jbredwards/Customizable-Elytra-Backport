@@ -1,6 +1,6 @@
 package git.jbredwards.customizableelytra.mod.common.recipe;
 
-import git.jbredwards.customizableelytra.api.customizations.WingCustomizations;
+import git.jbredwards.customizableelytra.api.customizations.DyeWingCustomization;
 import git.jbredwards.customizableelytra.mod.common.capability.IWingCapability;
 import git.jbredwards.customizableelytra.api.WingCustomizationData;
 import git.jbredwards.customizableelytra.mod.common.recipe.core.AbstractDynamicRecipe;
@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.oredict.DyeUtils;
 
 import javax.annotation.Nonnull;
@@ -29,11 +30,11 @@ public abstract class AbstractDyeingRecipe extends AbstractDynamicRecipe
     public abstract void applyDyesToStack(@Nonnull ItemStack stack, @Nonnull List<EnumDyeColor> dyes);
 
     public void applyDyesToWing(@Nonnull IWingCapability cap, @Nonnull List<EnumDyeColor> dyes) {
-        final WingCustomizationData data = WingCustomizationData.copyOf(cap.getData());
-        data.baseColor = getResultDyeColor(data.baseColor, dyes);
-        data.addCustomization(WingCustomizations.DYE);
-
-        cap.setData(data);
+        if(!cap.getData().hasTag("Banner")) {
+            final WingCustomizationData data = WingCustomizationData.copyOf(cap.getData());
+            data.addCustomization("Dye", new DyeWingCustomization(getResultDyeColor(data.baseColor, dyes)));
+            cap.setData(data);
+        }
     }
 
     public int getResultDyeColor(int baseColor, @Nonnull List<EnumDyeColor> dyes) {
@@ -86,7 +87,7 @@ public abstract class AbstractDyeingRecipe extends AbstractDynamicRecipe
             final ItemStack stack = inv.getStackInSlot(i);
             if(!stack.isEmpty()) {
                 if(dyeable.isEmpty() && isDyeableTarget(stack)) {
-                    dyeable = stack.copy();
+                    dyeable = ItemHandlerHelper.copyStackWithSize(stack, 1);
                     continue;
                 }
 

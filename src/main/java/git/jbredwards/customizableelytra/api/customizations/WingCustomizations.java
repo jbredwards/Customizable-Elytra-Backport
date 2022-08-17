@@ -16,12 +16,13 @@ import javax.annotation.Nonnull;
 @Mod.EventBusSubscriber(modid = Constants.MODID)
 public final class WingCustomizations
 {
+    @Nonnull public static final WingCustomizationEntry BANNER = new WingCustomizationEntry("Banner", BannerWingCustomization::new);
     @Nonnull public static final WingCustomizationEntry DYE = new WingCustomizationEntry("Dye", DyeWingCustomization::new);
     @Nonnull public static final WingCustomizationEntry GLASS = new WingCustomizationEntry("Glass", GlassWingCustomization::new);
     @Nonnull public static final WingCustomizationEntry GLOWING = new WingCustomizationEntry("Glowing", GlowingWingCustomization::new);
 
     @SubscribeEvent
     public static void registerDefaultCustomizations(@Nonnull WingCustomizationRegistryEvent event) {
-        event.registerAll(DYE, GLASS, GLOWING);
+        event.registerAll(BANNER, DYE, GLASS, GLOWING);
     }
 }

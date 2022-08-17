@@ -1,7 +1,7 @@
 package git.jbredwards.customizableelytra.mod.common.compat;
 
 import git.jbredwards.customizableelytra.api.WingCustomizationData;
-import git.jbredwards.customizableelytra.api.customizations.WingCustomizations;
+import git.jbredwards.customizableelytra.api.customizations.DyeWingCustomization;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.datafix.IFixableData;
 import net.minecraftforge.common.util.Constants;
@@ -27,8 +27,7 @@ public final class QuarkColorTagFix implements IFixableData
             final NBTTagCompound tag = compound.getCompoundTag("tag");
             if(tag.hasKey("quark:elytraDye", Constants.NBT.TAG_INT)) {
                 final WingCustomizationData data = new WingCustomizationData();
-                data.baseColor = tag.getInteger("quark:elytraDye");
-                data.addCustomization(WingCustomizations.DYE);
+                data.addCustomization("Dye", new DyeWingCustomization(tag.getInteger("quark:elytraDye")));
 
                 final NBTTagCompound cap = new NBTTagCompound();
                 cap.setTag("LeftWing", data.serializeNBT());

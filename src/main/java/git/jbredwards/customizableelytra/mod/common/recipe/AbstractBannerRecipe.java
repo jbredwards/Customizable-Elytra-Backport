@@ -1,42 +1,41 @@
 package git.jbredwards.customizableelytra.mod.common.recipe;
 
 import git.jbredwards.customizableelytra.api.WingCustomizationData;
-import git.jbredwards.customizableelytra.api.customizations.WingCustomizations;
+import git.jbredwards.customizableelytra.api.customizations.BannerWingCustomization;
 import git.jbredwards.customizableelytra.mod.common.capability.IWingCapability;
 import git.jbredwards.customizableelytra.mod.common.recipe.core.AbstractDynamicRecipe;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.ItemBanner;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.oredict.OreDictionary;
-import org.apache.commons.lang3.ArrayUtils;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  *
  * @author jbred
  *
  */
-public abstract class AbstractGlassRecipe extends AbstractDynamicRecipe
+public abstract class AbstractBannerRecipe extends AbstractDynamicRecipe
 {
     public abstract boolean isCustomizable(@Nonnull ItemStack stack);
-    public abstract void applyGlassToStack(@Nonnull ItemStack stack);
-    public void applyGlassToWing(@Nonnull IWingCapability cap) {
+    public abstract void applyBannerToStack(@Nonnull ItemStack stack, @Nonnull NBTTagList patterns, @Nonnull EnumDyeColor bannerColor);
+    public void applyBannerToWing(@Nonnull IWingCapability cap, @Nonnull NBTTagList patterns, @Nonnull EnumDyeColor bannerColor) {
         final WingCustomizationData data = WingCustomizationData.copyOf(cap.getData());
-        data.addCustomization(WingCustomizations.GLASS);
+        data.addCustomization("Banner", new BannerWingCustomization(patterns, bannerColor));
         cap.setData(data);
-    }
-
-    protected boolean isItemGlass(@Nonnull ItemStack stack) {
-        return ArrayUtils.contains(OreDictionary.getOreIDs(stack), OreDictionary.getOreID("blockGlass"));
     }
 
     @Override
     public boolean matches(@Nonnull InventoryCrafting inv, @Nonnull World worldIn) {
-        boolean foundElytra = false, foundGlowstone = false;
+        boolean foundElytra = false, foundBanner = false;
         for(int i = 0; i < inv.getSizeInventory(); i++) {
             final ItemStack stack = inv.getStackInSlot(i);
             if(!stack.isEmpty()) {
@@ -45,8 +44,8 @@ public abstract class AbstractGlassRecipe extends AbstractDynamicRecipe
                     continue;
                 }
 
-                if(!foundGlowstone && isItemGlass(stack)) {
-                    foundGlowstone = true;
+                if(!foundBanner && stack.getItem() == Items.BANNER) {
+                    foundBanner = true;
                     continue;
                 }
 
@@ -54,39 +53,47 @@ public abstract class AbstractGlassRecipe extends AbstractDynamicRecipe
             }
         }
 
-        return foundElytra && foundGlowstone;
+        return foundElytra && foundBanner;
     }
 
     @Nonnull
     @Override
     public ItemStack getCraftingResult(@Nonnull InventoryCrafting inv) {
         ItemStack elytra = ItemStack.EMPTY;
+        ItemStack banner = ItemStack.EMPTY;
 
         for(int i = 0; i < inv.getSizeInventory(); i++) {
             final ItemStack stack = inv.getStackInSlot(i);
             if(!stack.isEmpty()) {
-                if(isCustomizable(stack)) {
+                if(elytra.isEmpty() && isCustomizable(stack)) {
                     elytra = ItemHandlerHelper.copyStackWithSize(stack, 1);
-                    break;
+                    continue;
                 }
+
+                if(banner.isEmpty() && stack.getItem() == Items.BANNER) {
+                    banner = stack;
+                    continue;
+                }
+
+                //should never pass
+                return getRecipeOutput();
             }
         }
 
-        applyGlassToStack(elytra);
+        final EnumDyeColor color = ItemBanner.getBaseColor(banner);
+        NBTTagList patterns = new NBTTagList();
+
+        final @Nullable NBTTagCompound bannerNbt = banner.getTagCompound();
+        if(bannerNbt != null) patterns = bannerNbt.getCompoundTag("BlockEntityTag").getTagList("Patterns", 10);
+
+        applyBannerToStack(elytra, patterns, color);
         return elytra;
     }
 
     @Nonnull
     @Override
     public NonNullList<ItemStack> getRemainingItems(@Nonnull InventoryCrafting inv) {
-        final NonNullList<ItemStack> list = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
-        for(int i = 0; i < list.size(); i++) {
-            final ItemStack stack = inv.getStackInSlot(i);
-            if(!stack.isEmpty() && !isCustomizable(stack))
-                list.set(i, ForgeHooks.getContainerItem(stack));
-        }
-
-        return list;
+        return NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
     }
 
     @Override

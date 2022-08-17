@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -65,7 +66,7 @@ public abstract class AbstractGlowingRecipe extends AbstractDynamicRecipe
             final ItemStack stack = inv.getStackInSlot(i);
             if(!stack.isEmpty()) {
                 if(isCustomizable(stack)) {
-                    elytra = stack.copy();
+                    elytra = ItemHandlerHelper.copyStackWithSize(stack, 1);
                     break;
                 }
             }
