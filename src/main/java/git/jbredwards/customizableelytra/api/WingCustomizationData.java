@@ -88,7 +88,15 @@ public final class WingCustomizationData implements INBTSerializable<NBTTagCompo
     public String getTagAt(int index) { return tags.get(index); }
 
     @Nonnull
-    public IWingCustomization getCustomizationAt(int index) { return customizations.get(index); }
+    public IWingCustomization getCustomizationAt(int index) {
+        if(customizations.isEmpty() || customizations.size() <= index)
+            return IWingCustomization.NONE;
+
+        return customizations.get(index);
+    }
+
+    @Nonnull
+    public IWingCustomization getLastCustomization() { return getCustomizationAt(size() - 1); }
 
     /**
      * @return true if the customization is safe to add

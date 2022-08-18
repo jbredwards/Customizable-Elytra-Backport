@@ -37,7 +37,7 @@ public final class DragonWingCustomization implements IWingCustomization
     }
 
     @Override
-    public boolean onWash(@Nonnull WingCustomizationData data) { return false; }
+    public boolean onWash(@Nonnull WingCustomizationData data, boolean doWash) { return false; }
 
     @Override
     public boolean isConflictingWith(@Nonnull WingCustomizationData data, @Nonnull IWingCustomization other) { return true; }

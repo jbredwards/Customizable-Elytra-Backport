@@ -27,16 +27,17 @@ public interface IWingCustomization
     @Nonnull
     IWingCustomization NONE = new IWingCustomization() {
         public boolean isValid(@Nonnull WingCustomizationData data) { return false; }
+        public boolean onWash(@Nonnull WingCustomizationData data, boolean doWash) { return false; }
 
         @SideOnly(Side.CLIENT)
         public void addTooltip(@Nonnull ItemStack stack, @Nonnull WingCustomizationData data, @Nonnull List<String> tooltip, boolean advanced) { }
     };
 
     /**
-     * Called when this is washed with a cauldron, the data passed in is mutable and has yet to be assigned to the capability
+     * Called when this is washed with a cauldron, data is immutable unless "doWash" is set to true
      */
-    default boolean onWash(@Nonnull WingCustomizationData data) {
-        data.removeLast();
+    default boolean onWash(@Nonnull WingCustomizationData data, boolean doWash) {
+        if(doWash) data.removeLast();
         return true;
     }
 

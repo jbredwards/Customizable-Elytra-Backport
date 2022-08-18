@@ -2,7 +2,6 @@ package git.jbredwards.customizableelytra.mod.common.compat;
 
 import git.jbredwards.customizableelytra.api.WingCustomizationData;
 import git.jbredwards.customizableelytra.api.customizations.DyeWingCustomization;
-import git.jbredwards.customizableelytra.api.customizations.WingCustomizations;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.datafix.IFixableData;

@@ -30,5 +30,7 @@ public final class ModRecipes
             .add(new RecipeGlassElytraWing().setRegistryName(Constants.MODID, "glass_elytra_wings"))
             .add(new RecipeGlowingElytra().setRegistryName(Constants.MODID, "glowing_elytra"))
             .add(new RecipeGlowingElytraWing().setRegistryName(Constants.MODID, "glowing_elytra_wings"))
+            .add(new RecipeWashingElytra().setRegistryName(Constants.MODID, "washing_elytra"))
+            .add(new RecipeWashingElytraWing().setRegistryName(Constants.MODID, "washing_elytra_wings"))
             .build();
 }
